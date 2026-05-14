@@ -1,7 +1,14 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { FiUser, FiMail, FiLock, FiEye, FiEyeOff, FiUserPlus } from "react-icons/fi";
+import {
+  FiUser,
+  FiMail,
+  FiLock,
+  FiEye,
+  FiEyeOff,
+  FiUserPlus,
+} from "react-icons/fi";
 
 function Register() {
   const navigate = useNavigate();
@@ -38,7 +45,9 @@ function Register() {
             <div className="w-16 h-16 rounded-2xl bg-brand-50 flex items-center justify-center mx-auto mb-4">
               <FiUserPlus className="w-8 h-8 text-brand-600" />
             </div>
-            <h1 className="text-2xl font-bold text-slate-900">Create Account</h1>
+            <h1 className="text-2xl font-bold text-slate-900">
+              Create Account
+            </h1>
             <p className="text-sm text-slate-500 mt-2">
               Sign up to get started with Whitepace
             </p>
@@ -98,7 +107,11 @@ function Register() {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3.5 top-3.5 text-slate-400 hover:text-slate-600"
                 >
-                  {showPassword ? <FiEyeOff className="w-5 h-5" /> : <FiEye className="w-5 h-5" />}
+                  {showPassword ? (
+                    <FiEyeOff className="w-5 h-5" />
+                  ) : (
+                    <FiEye className="w-5 h-5" />
+                  )}
                 </button>
               </div>
             </div>
@@ -118,7 +131,10 @@ function Register() {
 
           <p className="text-center text-sm text-slate-500 mt-6">
             Already have an account?{" "}
-            <Link to="/login" className="font-semibold text-brand-600 hover:text-brand-700">
+            <Link
+              to="/login"
+              className="font-semibold text-brand-600 hover:text-brand-700"
+            >
               Sign in
             </Link>
           </p>

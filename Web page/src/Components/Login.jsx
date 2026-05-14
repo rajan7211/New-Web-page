@@ -15,7 +15,6 @@ function Login({ onLogin }) {
     setIsLoading(true);
 
     try {
-      // Simulate API login
       await new Promise((resolve) => setTimeout(resolve, 1500));
 
       const user = { name: "John Doe", email };
@@ -39,14 +38,12 @@ function Login({ onLogin }) {
         <div className="bg-white rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-200 p-8 animate-scaleIn">
           <div className="text-center mb-8">
             <div className="w-16 h-16 rounded-2xl bg-brand-50 flex items-center justify-center mx-auto mb-4">
-              <FiLogIn className="w-8 h-8 text-brand-600" />
             </div>
             <h1 className="text-2xl font-bold text-slate-900">Welcome Back</h1>
             <p className="text-sm text-slate-500 mt-2">
               Sign in to your account to continue
             </p>
           </div>
-
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-2">
@@ -112,7 +109,7 @@ function Login({ onLogin }) {
               to="/register"
               className="font-semibold text-brand-600 hover:text-brand-700"
             >
-              Create one
+              Register now
             </Link>
           </p>
         </div>

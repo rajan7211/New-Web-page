@@ -17,7 +17,6 @@ import {
 } from "react-icons/fi";
 import {
   FaRocket,
-  FaHeadset,
   FaClock,
   FaShieldAlt,
 } from "react-icons/fa";
@@ -103,7 +102,6 @@ const FormField = ({
           <IconDisplay />
         </div>
 
-        {/* Input / Textarea */}
         {isTextarea ? (
           <textarea
             id={name}
@@ -301,13 +299,6 @@ function Resources() {
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
           <div className="text-center max-w-2xl mx-auto animate-fadeInUp">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-50 border border-brand-100 mb-6">
-              <FaHeadset className="w-4 h-4 text-brand-600" />
-              <span className="text-sm font-semibold text-brand-700">
-                Get in Touch
-              </span>
-            </div>
 
             <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
               Contact{" "}
@@ -323,12 +314,9 @@ function Resources() {
         </div>
       </div>
 
-      {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <div className="grid lg:grid-cols-5 gap-8 lg:gap-12">
-          {/* Left Side - Info Cards */}
           <div className="lg:col-span-2 space-y-6 animate-slideInLeft">
-            {/* Back to Home */}
             <Link
               to="/"
               className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white border border-slate-200 text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all duration-300 shadow-sm"
@@ -337,7 +325,6 @@ function Resources() {
               Back to Home
             </Link>
 
-            {/* Trust Badges */}
             <div className="space-y-3">
               <TrustBadge
                 icon={FaClock}
@@ -356,7 +343,7 @@ function Resources() {
               />
             </div>
 
-            {/* Quick Stats */}
+
             <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
               <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">
                 Why Contact Us?
@@ -398,10 +385,8 @@ function Resources() {
             </div>
           </div>
 
-          {/* Right Side - Form */}
           <div className="lg:col-span-3 animate-slideInRight">
             <div className="glass-card rounded-3xl shadow-xl shadow-slate-200/50 border border-white/50 p-6 sm:p-8">
-              {/* Form Header */}
               <div className="flex items-center justify-between mb-6">
                 <div>
                   <h2 className="text-xl font-bold text-slate-900">
@@ -416,7 +401,7 @@ function Resources() {
                 </div>
               </div>
 
-              {/* Progress Bar */}
+
               <div className="mb-6">
                 <FormProgress formik={formik} />
               </div>

@@ -1,15 +1,16 @@
 import React from "react";
 import { FiCheckCircle } from "react-icons/fi";
+import "./Whitepace.css";
 
 function Whitepace() {
   return (
-    <section className="py-20 whitepace">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div className="w-16 h-16 rounded-2xl bg-brand-50 flex items-center justify-center mx-auto mb-6">
-          <FiCheckCircle className="w-8 h-8 text-brand-600" />
+    <section className="whitepace">
+      <div className="whitepace-container">
+        <div className="whitepace-icon">
+          <FiCheckCircle className="whitepace-icon-svg" />
         </div>
-        <h2 className="text-3xl sm:text-4xl font-bold text-slate-900">Whitepace</h2>
-        <p className="mt-4 text-lg text-slate-500 max-w-xl mx-auto">
+        <h2 className="whitepace-title">Whitepace</h2>
+        <p className="whitepace-desc">
           This is the Whitepace section. It renders correctly in your Whitepace application.
         </p>
       </div>

@@ -1,15 +1,16 @@
 import React from "react";
 import { FiCheckCircle } from "react-icons/fi";
+import "./Try.css";
 
 function Try() {
   return (
-    <section className="py-20 try">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div className="w-16 h-16 rounded-2xl bg-brand-50 flex items-center justify-center mx-auto mb-6">
-          <FiCheckCircle className="w-8 h-8 text-brand-600" />
+    <section className="try">
+      <div className="try-container">
+        <div className="try-icon">
+          <FiCheckCircle className="try-icon-svg" />
         </div>
-        <h2 className="text-3xl sm:text-4xl font-bold text-slate-900">Try</h2>
-        <p className="mt-4 text-lg text-slate-500 max-w-xl mx-auto">
+        <h2 className="try-title">Try</h2>
+        <p className="try-desc">
           This is the Try section. It renders correctly in your Whitepace application.
         </p>
       </div>
@@ -18,3 +19,6 @@ function Try() {
 }
 
 export default Try;
+
+
+
