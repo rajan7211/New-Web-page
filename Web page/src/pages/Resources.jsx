@@ -15,13 +15,9 @@ import {
   FiCheck,
   FiTag,
 } from "react-icons/fi";
-import {
-  FaRocket,
-  FaClock,
-  FaShieldAlt,
-} from "react-icons/fa";
 
-// Validation Schema
+import { FaRocket, FaClock, FaShieldAlt } from "react-icons/fa";
+
 const validationSchema = Yup.object({
   fullName: Yup.string()
     .trim()
@@ -41,7 +37,6 @@ const validationSchema = Yup.object({
     .required("Message is required"),
 });
 
-// Custom Input Field Component
 const FormField = ({
   label,
   name,
@@ -55,7 +50,8 @@ const FormField = ({
   hint,
 }) => {
   const hasError = formik.touched[name] && formik.errors[name];
-  const isValid = formik.touched[name] && !formik.errors[name] && formik.values[name];
+  const isValid =
+    formik.touched[name] && !formik.errors[name] && formik.values[name];
   const isTouched = formik.touched[name];
 
   const inputClasses = `
@@ -68,10 +64,10 @@ const FormField = ({
       hasError
         ? "border-red-400 focus:border-red-500 focus:ring-4 focus:ring-red-500/10"
         : isValid
-        ? "border-emerald-400 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10"
-        : isTouched
-        ? "border-slate-200 focus:border-brand-400 focus:ring-4 focus:ring-brand-500/10"
-        : "border-slate-200 focus:border-brand-400 focus:ring-4 focus:ring-brand-500/10"
+          ? "border-emerald-400 focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10"
+          : isTouched
+            ? "border-slate-200 focus:border-brand-400 focus:ring-4 focus:ring-brand-500/10"
+            : "border-slate-200 focus:border-brand-400 focus:ring-4 focus:ring-brand-500/10"
     }
   `;
 
@@ -97,7 +93,6 @@ const FormField = ({
       </div>
 
       <div className="relative">
-        {/* Icon */}
         <div className="absolute left-3.5 top-3.5 z-10 pointer-events-none">
           <IconDisplay />
         </div>
@@ -127,6 +122,8 @@ const FormField = ({
           />
         )}
 
+
+
         {/* Status indicator dot */}
         {isValid && (
           <div className="absolute right-3 top-3.5 animate-scaleIn">
@@ -139,7 +136,9 @@ const FormField = ({
       {hasError && (
         <div className="flex items-start gap-1.5 animate-fadeInUp">
           <FiAlertCircle className="w-3.5 h-3.5 text-red-400 mt-0.5 flex-shrink-0" />
-          <p className="text-xs font-medium text-red-500">{formik.errors[name]}</p>
+          <p className="text-xs font-medium text-red-500">
+            {formik.errors[name]}
+          </p>
         </div>
       )}
 
@@ -174,7 +173,7 @@ const FormField = ({
   );
 };
 
-// Trust badge component
+
 const TrustBadge = ({ icon: Icon, title, subtitle }) => (
   <div className="flex items-start gap-3 p-4 rounded-xl bg-white/60 border border-slate-100 hover:bg-white/80 transition-all duration-300 group">
     <div className="w-10 h-10 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
@@ -187,34 +186,6 @@ const TrustBadge = ({ icon: Icon, title, subtitle }) => (
   </div>
 );
 
-// Progress Indicator
-const FormProgress = ({ formik }) => {
-  const fields = ["fullName", "email", "subject", "message"];
-  const totalFields = fields.length;
-  const validFields = fields.filter(
-    (f) => formik.touched[f] && !formik.errors[f] && formik.values[f]
-  ).length;
-  const progress = (validFields / totalFields) * 100;
-
-  return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-          Form Progress
-        </span>
-        <span className="text-xs font-bold text-brand-600">
-          {Math.round(progress)}%
-        </span>
-      </div>
-      <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-        <div
-          className="h-full rounded-full bg-brand-600 transition-all duration-500 ease-out"
-          style={{ width: `${progress}%` }}
-        />
-      </div>
-    </div>
-  );
-};
 
 function Resources() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -235,13 +206,12 @@ function Resources() {
       setSubmitting(true);
 
       try {
-        // Simulate API call with axios compatibility
-        // Future integration: const response = await axios.post('/api/contact', values);
+        
         await new Promise((resolve) => setTimeout(resolve, 2000));
 
         // Store in localStorage for compatibility
         const contactSubmissions = JSON.parse(
-          localStorage.getItem("contactSubmissions") || "[]"
+          localStorage.getItem("contactSubmissions") || "[]",
         );
         contactSubmissions.push({
           ...values,
@@ -250,28 +220,32 @@ function Resources() {
         });
         localStorage.setItem(
           "contactSubmissions",
-          JSON.stringify(contactSubmissions)
+          JSON.stringify(contactSubmissions),
         );
 
         setSubmittedData(values);
 
-        toast.success("Message sent successfully! We'll get back to you soon.", {
-          position: "top-right",
-          autoClose: 3000,
-          theme: "dark",
-          icon: <FiCheckCircle className="w-5 h-5" />,
-        });
+        toast.success(
+          "Message sent successfully! We'll get back to you soon.",
+          {
+            position: "top-right",
+            autoClose: 3000,
+            theme: "dark",
+            icon: <FiCheckCircle className="w-5 h-5" />,
+          },
+        );
 
         resetForm();
         setTimeout(() => setSubmittedData(null), 5000);
       } catch (error) {
         toast.error(
-          error?.response?.data?.message || "Something went wrong. Please try again.",
+          error?.response?.data?.message ||
+            "Something went wrong. Please try again.",
           {
             position: "top-right",
             autoClose: 3000,
             theme: "dark",
-          }
+          },
         );
       } finally {
         setIsSubmitting(false);
@@ -287,6 +261,7 @@ function Resources() {
     formik.values.message &&
     Object.keys(formik.errors).length === 0;
 
+    
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Hero Section */}
@@ -299,7 +274,6 @@ function Resources() {
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
           <div className="text-center max-w-2xl mx-auto animate-fadeInUp">
-
             <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
               Contact{" "}
               <span className="bg-brand-600 bg-clip-text text-transparent">
@@ -342,7 +316,6 @@ function Resources() {
                 subtitle="Our team of experts is ready to help you succeed."
               />
             </div>
-
 
             <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
               <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">
@@ -401,10 +374,6 @@ function Resources() {
                 </div>
               </div>
 
-
-              <div className="mb-6">
-                <FormProgress formik={formik} />
-              </div>
 
               {/* Success Card */}
               {submittedData && (
@@ -511,7 +480,7 @@ function Resources() {
                     <>
                       <FiCheckCircle className="w-3.5 h-3.5 text-emerald-400" />
                       <span className="text-emerald-600 font-medium">
-                        All fields look good — ready to submit
+                        All fields are good — ready to submit
                       </span>
                     </>
                   ) : (
@@ -523,12 +492,6 @@ function Resources() {
                 </div>
               </form>
             </div>
-
-            {/* Privacy note */}
-            <p className="text-center text-xs text-slate-400 mt-4 px-4">
-              By submitting this form, you agree to our privacy policy. We respect
-              your data and never share it with third parties.
-            </p>
           </div>
         </div>
       </div>
@@ -537,6 +500,20 @@ function Resources() {
 }
 
 export default Resources;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

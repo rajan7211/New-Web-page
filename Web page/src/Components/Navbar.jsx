@@ -12,19 +12,19 @@ function Navbar({ isLoggedIn, userName, onLogout }) {
 
   const user = JSON.parse(localStorage.getItem("currentUser"));
 
-  // Debug: Check state
+
   useEffect(() => {
     console.log("Mobile Menu Open:", mobileMenuOpen);
   }, [mobileMenuOpen]);
 
-  // Close dropdown on outside click
+ 
   useEffect(() => {
     const closeProfile = () => setShowProfile(false);
     window.addEventListener("click", closeProfile);
     return () => window.removeEventListener("click", closeProfile);
   }, []);
 
-  // Close mobile menu on route change
+ 
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [location.pathname]);
