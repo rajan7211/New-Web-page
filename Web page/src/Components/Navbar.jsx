@@ -12,7 +12,6 @@ function Navbar({ isLoggedIn, userName, onLogout }) {
   const [user, setUser] = useState(null);
   const profileRef = useRef(null);
 
-  // Safe user parse from localStorage
   useEffect(() => {
     try {
       const stored = localStorage.getItem("currentUser");

@@ -14,7 +14,7 @@ import Client from "./Components/Client";
 import Try from "./Components/Try";
 import Company from "./Components/Company";
 
-import Resources from "./pages/Resources";
+import Resources from "./pages/Contact";
 import Pricingg from "./pages/Pricingg";
 import Solutions from "./pages/Solutions";
 import Demands from "./pages/Demands";
@@ -22,41 +22,42 @@ import ProtectedRoute from "./Components/ProtectedRoute";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+import useAuth from "./hooks/useAuth";
+
 import { HashRouter, Routes, Route } from "react-router-dom";
-import { useState } from "react";
+
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    return localStorage.getItem("isLoggedIn") === "true";
-  });
+ const {
+  isLoggedIn,
+  user,
+  login,
+  logout,
+ } = useAuth();
 
-  const [userName, setUserName] = useState(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    return user ? user.name : "";
-  });
 
-  const handleLogin = (name) => {
-    setIsLoggedIn(true);
-    setUserName(name);
-  };
-
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    setUserName("");
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("token");
-    localStorage.removeItem("currentUser");
-  };
 
   return (
     <HashRouter>
       <Navbar
-        isLoggedIn={isLoggedIn}
-        userName={userName}
-        onLogout={handleLogout}
+      isLoggedIn={isLoggedIn}
+      userName={user?.name}
+      onLogout={logout}
+      
       />
       <Routes>
-        <Route
+       <Route
+       path="/login"
+       element = {<Login onLogin={login}/>}
+       />
+
+       <Route
+       path="/register"
+       element = {<Register/>}
+       />
+       
+
+         <Route
           path="/"
           element={
             <ProtectedRoute>
@@ -71,82 +72,80 @@ function App() {
                 <Client />
                 <Try />
                 <Company />
-                <Footer />
               </>
             </ProtectedRoute>
           }
         />
 
-        <Route
-          path="/login"
-          element={
-            <>
-              <Login onLogin={handleLogin} />
-              <Footer />
-            </>
-          }
-        />
+   <Route
+   path="/resources"
+   element = {
+    <ProtectedRoute>
+      <Resources/>
+    </ProtectedRoute>
+   }
+/>
 
-        <Route
-          path="/register"
-          element={
-            <>
-              <Register />
-              <Footer />
-            </>
-          }
-        />
+  <Route
+  path="/pricing"
+  element = {
+    <ProtectedRoute>
+      <Pricingg/>
+    </ProtectedRoute>
+  }
+  />
 
-        <Route
-          path="/resources"
-          element={
-            <>
-              <Resources />
-              <Footer />
-            </>
-          }
-        />
-        <Route
-          path="/pricing"
-          element={
-            <>
-              <Pricingg />
-              <Footer />
-            </>
-          }
-        />
-        <Route
-          path="/solutions"
-          element={
-            <>
-              <Solutions />
-              <Footer />
-            </>
-          }
-        />
-        <Route
-          path="/demands"
-          element={
-            <>
-              <Demands />
-              <Footer />
-            </>
-          }
-        />
-      </Routes>
-      <ToastContainer
-        position="top-right"
-        autoClose={2000}
-        theme="dark"
-        newestOnTop
-        closeOnClick
-        pauseOnHover
-      />
+   <Route
+   path="/solutions"
+   element = {
+    <ProtectedRoute>
+      <Solutions/>
+    </ProtectedRoute>
+   }
+
+   />
+
+  <Route
+  path="/demands"
+  element ={
+    <ProtectedRoute>
+      <Demands/>
+    </ProtectedRoute>
+  }
+  />
+
+
+</Routes>
+
+
+  
+   <Footer/>
+   <ToastContainer
+   position="top-right"
+   autoClose = {2000}
+   theme="dark"
+   newestOnTop
+   closeOnClick
+   pauseOnHover
+   />
+  
     </HashRouter>
-  );
+  )
+
 }
 
+
 export default App;
+
+
+
+
+
+
+
+
+
+
 
 
 

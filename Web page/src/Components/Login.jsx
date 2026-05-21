@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
+
 import {
   FiMail,
   FiLock,
@@ -47,19 +48,17 @@ function Login({ onLogin }) {
       setIsLoading(true);
 
       try {
-        // Fake API delay
-        await new Promise((resolve) => setTimeout(resolve, 1500));
+        await new Promise((resolve) => 
+          setTimeout(resolve, 1500));
 
         const user = {
           name: "John Doe",
           email: values.email,
         };
 
-        localStorage.setItem("isLoggedIn", "true");
-        localStorage.setItem("currentUser", JSON.stringify(user));
-        localStorage.setItem("token", "demo-token-123");
+  // useAuth login
 
-        onLogin(user.name);
+        onLogin(user);
 
         toast.success("Login successful!");
 
@@ -71,6 +70,8 @@ function Login({ onLogin }) {
       }
     },
   });
+
+
 
   const isFormValid =
     formik.values.email &&
@@ -96,16 +97,13 @@ function Login({ onLogin }) {
             </p>
           </div>
 
-          {/* Form */}
           <form onSubmit={formik.handleSubmit} className="space-y-5">
-            {/* Email Field */}
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-2">
                 Email
               </label>
 
               <div className="relative">
-                {/* Left Icon */}
                 <div className="absolute left-3.5 top-3.5">
                   {formik.touched.email && formik.errors.email ? (
                     <FiAlertCircle className="w-5 h-5 text-red-400" />
@@ -142,18 +140,9 @@ function Login({ onLogin }) {
                     }
                   `}
                 />
-
-                {/* Green Dot */}
-                {formik.touched.email &&
-                  !formik.errors.email &&
-                  formik.values.email && (
-                    <div className="absolute right-3 top-3.5">
-                      <div className="w-2 h-2 rounded-full bg-emerald-400" />
-                    </div>
-                  )}
               </div>
 
-              {/* Error Message */}
+               {/* Error Message  */}
               {formik.touched.email && formik.errors.email && (
                 <div className="flex items-center gap-1.5 mt-1">
                   <FiAlertCircle className="w-3.5 h-3.5 text-red-400" />
@@ -172,7 +161,7 @@ function Login({ onLogin }) {
                     <FiCheckCircle className="w-3.5 h-3.5 text-emerald-400" />
 
                     <p className="text-xs font-medium text-emerald-600">
-                      Looks good
+                      done
                     </p>
                   </div>
                 )}
@@ -258,7 +247,7 @@ function Login({ onLogin }) {
                     <FiCheckCircle className="w-3.5 h-3.5 text-emerald-400" />
 
                     <p className="text-xs font-medium text-emerald-600">
-                      Looks good
+                     Done
                     </p>
                   </div>
                 )}
