@@ -3,91 +3,89 @@ import { FiUsers, FiActivity } from "react-icons/fi";
 import DashboardLayout from "../components/DashboardLayout";
 import useAuth from "../hooks/useAuth";
 
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
+} from "@/components/ui/table";
+
 function AdminDashboard() {
   const { getManagedCustomers } = useAuth();
-
   const customers = useMemo(() => getManagedCustomers(), [getManagedCustomers]);
-  return (
-    <DashboardLayout
-      title="Admin Dashboard"
-      subtitle="Manage customers and track activity"
-    >
-      <section className="space-y-6">
-        <div className="grid gap-4 md:grid-cols-3">
-          <OverviewCard
-            title="Customers"
-            value={customers.length}
-            icon={<FiUsers />}
-          />
 
-          <OverviewCard
-            title="Active"
-            value={customers.filter((c) => c.status === "active").length}
-            icon={<FiActivity />}
-          />
+  const stats = [
+    { title: "Total Customers", value: customers.length,                                  icon: <FiUsers />,    color: "text-blue-600",   bg: "bg-blue-50" },
+    { title: "Active",          value: customers.filter((c) => c.status === "active").length, icon: <FiActivity />, color: "text-emerald-600",bg: "bg-emerald-50" },
+  ];
+
+  return (
+    <DashboardLayout title="Admin Dashboard" subtitle="Manage customers and track activity">
+      <section className="space-y-6">
+        {/* Stats */}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {stats.map(({ title, value, icon, color, bg }) => (
+            <Card key={title} className="rounded-2xl border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+              <CardContent className="flex items-center gap-4 p-5">
+                <div className={`rounded-xl p-3 text-2xl ${bg} ${color}`}>{icon}</div>
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">{title}</p>
+                  <p className="text-2xl font-bold text-slate-900">{value}</p>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
 
-        <div className="rounded-2xl border bg-white p-5">
-          <div className="mt-5 overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b text-left">
-                  <th className="py-3">Name</th>
-                  <th>Email</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
+        {/* Customer table */}
+        <Card className="rounded-2xl border-slate-200 shadow-sm overflow-hidden">
+          <CardHeader className="border-b border-slate-100">
+            <CardTitle className="text-base font-bold text-slate-800">Customer List</CardTitle>
+          </CardHeader>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-slate-50 hover:bg-slate-50 border-b border-slate-100">
+                  <TableHead className="text-slate-500 font-semibold px-6">Name</TableHead>
+                  <TableHead className="text-slate-500 font-semibold px-6">Email</TableHead>
+                  <TableHead className="text-slate-500 font-semibold px-6">Status</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {customers.length > 0 ? (
                   customers.map((customer) => (
-                    <tr key={customer.id} className="border-b last:border-0">
-                      <td className="py-3">{customer.name}</td>
-                      <td>{customer.email}</td>
-                      <td>
-                        <span
-                          className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    <TableRow key={customer.id} className="hover:bg-slate-50/60 border-slate-100 transition-colors">
+                      <TableCell className="px-6 py-3 font-semibold text-slate-900">{customer.name}</TableCell>
+                      <TableCell className="px-6 py-3 text-slate-600 text-sm">{customer.email}</TableCell>
+                      <TableCell className="px-6 py-3">
+                        <Badge
+                          className={`text-xs font-semibold capitalize ${
                             customer.status === "active"
-                              ? "bg-green-100 text-green-700"
-                              : "bg-yellow-100 text-yellow-700"
+                              ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100"
+                              : "bg-amber-100 text-amber-700 hover:bg-amber-100"
                           }`}
                         >
                           {customer.status}
-                        </span>
-                      </td>
-                    </tr>
+                        </Badge>
+                      </TableCell>
+                    </TableRow>
                   ))
                 ) : (
-                  <tr>
-                    <td colSpan={3} className="py-8 text-center text-gray-500">
+                  <TableRow>
+                    <TableCell colSpan={3} className="py-10 text-center text-slate-400">
                       No customers found.
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 )}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
-        </div>
+        </Card>
       </section>
     </DashboardLayout>
   );
 }
 
-function OverviewCard({ title, value, icon }) {
-  return (
-    <div className="rounded-2xl border bg-white p-5 shadow-sm hover:shadow-md transition-shadow">
-      <div className="flex items-center gap-4">
-        <div className="text-blue-600 bg-blue-50 p-3 rounded-xl text-2xl">{icon}</div>
-        <div>
-          <p className="text-sm font-medium text-gray-500">{title}</p>
-          <h2 className="text-2xl font-bold text-gray-900">{value}</h2>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default AdminDashboard;
-
 
 
 
