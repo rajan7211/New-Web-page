@@ -1,55 +1,25 @@
-import { FiLayers, FiUserPlus, FiZap, FiTrendingUp } from "react-icons/fi";
+import { FiLayers, FiUserPlus, FiZap } from "react-icons/fi";
 
 const steps = [
-  {
-    num: "01",
-    icon: FiLayers,
-    title: "Create Workspace",
-    desc: "Set up your team workspace in under 2 minutes with customizable templates.",
-  },
-  {
-    num: "02",
-    icon: FiUserPlus,
-    title: "Invite Team",
-    desc: "Add members via email or share a simple invite link with role-based permissions.",
-  },
-  {
-    num: "03",
-    icon: FiZap,
-    title: "Start Collaborating",
-    desc: "Begin assigning tasks, sharing files, and tracking progress in real-time.",
-  },
-  {
-    num: "04",
-    icon: FiTrendingUp,
-    title: "Ship Faster",
-    desc: "Use analytics and automation to identify bottlenecks and accelerate delivery.",
-  },
+  { icon: FiLayers, title: "Workspace", text: "Create your team hub." },
+  { icon: FiUserPlus, title: "Invite", text: "Bring your team in." },
+  { icon: FiZap, title: "Ship", text: "Start delivering projects." },
 ];
 
 export default function Work() {
   return (
-    <section className="py-20 bg-slate-50">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 className="text-3xl sm:text-4xl font-bold text-slate-900">How It Works</h2>
-        <p className="mt-4 text-lg text-slate-500">Get started in four simple steps.</p>
-
-        <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
-          {steps.map((step) => (
-            <div
-              key={step.num}
-              className="relative p-6 bg-white rounded-2xl border border-slate-200 hover:border-blue-200 hover:shadow-md transition-all duration-300"
-            >
-              <span className="text-4xl font-extrabold text-slate-100 absolute top-4 right-4 select-none">
-                {step.num}
-              </span>
-
-              <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center mb-4">
-                <step.icon className="w-5 h-5 text-blue-600" />
+    <section className="py-20 bg-white">
+      <div className="max-w-7xl mx-auto px-6 text-center">
+        <h2 className="text-3xl font-bold mb-12">How It Works</h2>
+        <div className="grid md:grid-cols-3 gap-10">
+          {steps.map((s, i) => (
+            <div key={i} className="relative group">
+              <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-2xl mx-auto mb-6 transition group-hover:bg-blue-600 group-hover:text-white">
+                <s.icon />
               </div>
-
-              <h3 className="text-lg font-bold text-slate-900">{step.title}</h3>
-              <p className="mt-2 text-sm text-slate-500 leading-relaxed">{step.desc}</p>
+              <h3 className="text-xl font-bold">{s.title}</h3>
+              <p className="mt-2 text-slate-500">{s.text}</p>
+              {i < 2 && <div className="hidden lg:block absolute top-8 left-full w-full border-t-2 border-dashed border-slate-100 -z-10" />}
             </div>
           ))}
         </div>
@@ -57,11 +27,3 @@ export default function Work() {
     </section>
   );
 }
-
-
-
-
-
-
-
-

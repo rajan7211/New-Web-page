@@ -1,68 +1,20 @@
-import { useState } from "react";
+import { useContext } from "react";
+// Ensure the path is correct and it matches the named export
+import { AuthContext } from "../context/AuthContext"; 
 
- function useAuth() {
-    const [ isLoggedIn , setisloggedIn] = useState (
-        localStorage.getItem("isLoggedIn") === "true"
+function useAuth() {
+  const context = useContext(AuthContext);
+  
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
 
-    );
-
-    const [user , setUser] = useState(()=> {
-        const storeUser = localStorage.getItem("currentUser")
-        return storeUser 
-        ? JSON.parse(storeUser)
-        : null;
-    });
-
-
-    
-    // login 
-
-    const login = (userData) => {
-        localStorage.setItem("isLoggedIn" , "true");
-
-        localStorage.setItem (
-            "currentUser",
-            JSON.stringify(userData)
-        );
-
-        localStorage.setItem(
-            "token",
-            "demo-token-123"
-        );
-        setisloggedIn(true);
-
-        setUser(userData);
-
-    };
-
-
-    // logout 
-
-
-    const logout = () => {
-        localStorage.removeItem("isLoggedIn")
-         
-           localStorage.removeItem("currentUser");
-
-           localStorage.removeItem("token")
-
-           setUser(null);
-    };
-
-
-    return {
-        isLoggedIn,
-        user,
-        login,
-        logout,
-
-    };
-
+  return context;
 }
 
-
-
 export default useAuth;
+
+
 
 
 
