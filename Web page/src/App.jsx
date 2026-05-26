@@ -4,8 +4,9 @@ import { HashRouter, Routes, Route } from "react-router-dom";
 
 import { AuthProvider } from "./context/AuthContext";
 
-import Navbar from "./Components/Navbar";
-import Footer from "./Components/Footer";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import ImpersonationBanner from "./components/ImpersonationBanner"; // ← NEW
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -18,17 +19,17 @@ import CustomerDashboard from "./pages/CustomerDashboard";
 import Unauthorized from "./pages/Unauthorized";
 import NotFound from "./pages/NotFound";
 
-import ProtectedRoute from "./Components/ProtectedRoute";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
     <HashRouter>
       <AuthProvider>
+        <ImpersonationBanner />
 
         <Navbar />
 
         <Routes>
-
           {/* Protected Home Page */}
           <Route
             path="/"
@@ -40,8 +41,8 @@ function App() {
           />
 
           {/* Public Routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="/login"        element={<Login />} />
+          <Route path="/register"     element={<Register />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
 
           {/* Super Admin Route */}
@@ -76,7 +77,6 @@ function App() {
 
           {/* Not Found */}
           <Route path="*" element={<NotFound />} />
-
         </Routes>
 
         <Footer />
@@ -89,13 +89,11 @@ function App() {
           closeOnClick
           pauseOnHover
         />
-
       </AuthProvider>
     </HashRouter>
   );
 }
 
 export default App;
-
 
 

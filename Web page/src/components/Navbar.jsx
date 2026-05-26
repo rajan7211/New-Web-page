@@ -1,6 +1,6 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
-import { FaUserCircle, FaBars, FaTimes } from "react-icons/fa";
+import { FaBars, FaTimes } from "react-icons/fa";
 import { FiShoppingCart, FiUser, FiPackage, FiSettings, FiLogOut } from "react-icons/fi";
 import { useState, useEffect, useRef } from "react";
 import useAuth from "../hooks/useAuth";
@@ -89,7 +89,7 @@ function Navbar() {
             <span className="text-xl font-bold text-slate-800 hidden sm:block">whitepace</span>
           </Link>
 
-          {/* Desktop nav links */}
+          {/* Desktop nav links  */}
           <ul className="hidden md:flex items-center gap-1">
             {navLinks.map((link) => (
               <li key={`${link.to}-${link.label}`}>

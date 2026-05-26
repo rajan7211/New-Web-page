@@ -89,7 +89,6 @@ function CustomerDashboard() {
     </DashboardLayout>
   );
 }
-
 function ProfileCard({ user }) {
   const initial = user?.name?.charAt(0)?.toUpperCase() || "U";
   return (

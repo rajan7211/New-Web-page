@@ -5,10 +5,10 @@ import {
   FiShoppingBag, FiUser, FiMenu, FiX, FiLogOut, FiChevronRight,
 } from "react-icons/fi";
 import useAuth from "../hooks/useAuth";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
+import { Button } from "./ui/button";
+import { Avatar, AvatarFallback } from "./ui/avatar";
+import { Separator } from "./ui/separator";
+import { Badge } from "./ui/badge";
 
 const roleMenu = {
   "Super Admin": [
