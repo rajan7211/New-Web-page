@@ -3,20 +3,14 @@ import { FiAlertTriangle, FiLogOut, FiUser } from "react-icons/fi";
 import useAuth from "../hooks/useAuth";
 import { Button } from "./ui/button";
 
-/**
- * Shown at the very top of the page when an admin/super-admin
- * is currently impersonating another user.
- */
 function ImpersonationBanner() {
-  const { isImpersonating, currentUser, realUser, stopImpersonating, getDashboardRoute } =
-    useAuth();
+  const { isImpersonating, currentUser, realUser, stopImpersonating, getDashboardRoute } = useAuth();
   const navigate = useNavigate();
 
   if (!isImpersonating || !realUser) return null;
 
   const handleStop = () => {
     stopImpersonating();
-    // Navigate to the real user's dashboard after restoring session
     navigate(getDashboardRoute(realUser.role), { replace: true });
   };
 
@@ -24,7 +18,6 @@ function ImpersonationBanner() {
     <div className="sticky top-0 z-[9999] w-full bg-amber-500 text-amber-950 shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-wrap items-center justify-between gap-3 py-2.5">
-          {/* Left: info */}
           <div className="flex items-center gap-2.5 text-sm font-semibold">
             <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-amber-900/20">
               <FiAlertTriangle className="w-3.5 h-3.5" />
@@ -39,7 +32,6 @@ function ImpersonationBanner() {
             </span>
           </div>
 
-          {/* Right: real user info + stop button */}
           <div className="flex items-center gap-3">
             <span className="text-xs opacity-75 hidden sm:block">
               Logged in as: <strong>{realUser?.name}</strong> ({realUser?.role})
@@ -47,7 +39,7 @@ function ImpersonationBanner() {
             <Button
               size="sm"
               onClick={handleStop}
-              className="gap-2 rounded-lg bg-amber-900 text-amber-50 hover:bg-amber-950 border-0 text-xs font-bold shadow-sm transition-all"
+              className="gap-2 rounded-lg bg-amber-900 text-amber-50 hover:bg-amber-950"
             >
               <FiLogOut className="w-3.5 h-3.5" />
               Stop Impersonating
@@ -60,6 +52,5 @@ function ImpersonationBanner() {
 }
 
 export default ImpersonationBanner;
-
 
 
