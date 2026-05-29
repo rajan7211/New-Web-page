@@ -61,27 +61,6 @@ const products = [
   },
 ];
 
-const categories = [
-  {
-    id: "category-1",
-    title: "Analytics",
-    count: 42,
-    color: "from-blue-500 to-cyan-500",
-  },
-  {
-    id: "category-2",
-    title: "Payments",
-    count: 18,
-    color: "from-violet-500 to-fuchsia-500",
-  },
-  {
-    id: "category-3",
-    title: "Customer Success",
-    count: 24,
-    color: "from-emerald-500 to-teal-500",
-  },
-];
-
 const testimonials = [
   {
     id: "testimonial-1",
@@ -125,11 +104,7 @@ const orders = [
   },
 ];
 
-export default {
-  users,
-  products,
-  categories,
-  testimonials,
-  orders,
-};
+export default { users, products, testimonials, orders };
+
+
 
