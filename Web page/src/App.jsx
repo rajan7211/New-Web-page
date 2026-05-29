@@ -1,124 +1,98 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { HashRouter, Routes, Route } from "react-router-dom";
+
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ImpersonationBanner from "./components/ImpersonationBanner";
 import Navbar from "./components/Navbar";
+// import Footer from "./components/Footer";
 
-// Public Pages
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import NotFound from "./pages/NotFound";
 import Unauthorized from "./pages/Unauthorized";
+import NotFound from "./pages/NotFound";
 
-// Super Admin
-import SuperAdminLayout from "./pages/super-admin/SuperAdminLayout";
-import SuperAdminDashboard from "./pages/super-admin/Dashboard";
-import SuperAdminUsers from "./pages/super-admin/Users";
-import SuperAdminAdmins from "./pages/super-admin/Admins";
-import SuperAdminCustomers from "./pages/super-admin/Customers";
-import SuperAdminAnalytics from "./pages/super-admin/Analytics";
-import SuperAdminSettings from "./pages/super-admin/Settings";
+// Super Admin nested pages
+import SuperAdminLayout from "./pages/superadmin/SuperAdminlayout";
+import SuperAdminDashboard from "./pages/superadmin/SuperAdmindashboard";
+import SuperAdminUsers from "./pages/superadmin/SuperAdminusers";
+import SuperAdminAdmins from "./pages/superadmin/SuperAdminadmins";
+import SuperAdminCustomers from "./pages/superadmin/SuperAdmincustomers";
+import SuperAdminAnalytics from "./pages/superadmin/SuperAdminanalytics";
+import SuperAdminSettings from "./pages/superadmin/SuperAdminsettings";
 
-// Admin
-import AdminLayout from "./pages/admin/AdminLayout";
-import AdminDashboard from "./pages/admin/Dashboard";
-import AdminCustomers from "./pages/admin/Customers";
-import AdminReports from "./pages/admin/Reports";
-import AdminSettings from "./pages/admin/Settings";
+// Admin nested pages
+import AdminLayout from "./pages/admin/Adminlayout";
+import AdminDashboard from "./pages/admin/Admindashboard";
+import AdminCustomers from "./pages/admin/Admincustomers";
+import AdminReports from "./pages/admin/Adminreports";
+import AdminSettings from "./pages/admin/Adminsettings";
 
-// Customer
-import CustomerLayout from "./pages/customer/CustomerLayout";
-import CustomerDashboard from "./pages/customer/Dashboard";
-import CustomerProfile from "./pages/customer/Profile";
-import CustomerOrders from "./pages/customer/Orders";
-import CustomerSettings from "./pages/customer/Settings";
+// Customer nested pages
+import CustomerLayout from "./pages/customer/Customerlayout";
+import CustomerDashboard from "./pages/customer/Customerdashboard";
+import CustomerProfile from "./pages/customer/Customerprofile";
+import CustomerOrders from "./pages/customer/Customerorders";
+import CustomerSettings from "./pages/customer/Customersettings";
 
 function App() {
   return (
-    <Router>
+    <HashRouter>
       <AuthProvider>
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/20 to-indigo-50/30">
-          <ImpersonationBanner />
-          <Navbar />
-          
-          <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/unauthorized" element={<Unauthorized />} />
+        <ImpersonationBanner />
+        <Navbar />
 
-            {/* Super Admin Nested Routes */}
-            <Route
-              path="/super-admin"
-              element={
-                <ProtectedRoute roles={["Super Admin"]}>
-                  <SuperAdminLayout />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<SuperAdminDashboard />} />
-              <Route path="users" element={<SuperAdminUsers />} />
-              <Route path="admins" element={<SuperAdminAdmins />} />
-              <Route path="customers" element={<SuperAdminCustomers />} />
-              <Route path="analytics" element={<SuperAdminAnalytics />} />
-              <Route path="settings" element={<SuperAdminSettings />} />
-            </Route>
+        <Routes>
+          <Route path="/login"        element={<Login />} />
+          <Route path="/register"     element={<Register />} />
+          <Route path="/unauthorized" element={<Unauthorized />} />
+          <Route path="/"             element={<ProtectedRoute><Home /></ProtectedRoute>} />
 
-            {/* Admin Nested Routes */}
-            <Route
-              path="/admin"
-              element={
-                <ProtectedRoute roles={["Admin"]}>
-                  <AdminLayout />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<AdminDashboard />} />
-              <Route path="customers" element={<AdminCustomers />} />
-              <Route path="reports" element={<AdminReports />} />
-              <Route path="settings" element={<AdminSettings />} />
-            </Route>
+          {/* ── Super Admin ── */}
+          <Route
+            path="/super-admin"
+            element={<ProtectedRoute roles={["Super Admin"]}><SuperAdminLayout /></ProtectedRoute>}
+          >
+            <Route index          element={<SuperAdminDashboard />} />
+            <Route path="users"     element={<SuperAdminUsers />} />
+            <Route path="admins"    element={<SuperAdminAdmins />} />
+            <Route path="customers" element={<SuperAdminCustomers />} />
+            <Route path="analytics" element={<SuperAdminAnalytics />} />
+            <Route path="settings"  element={<SuperAdminSettings />} />
+          </Route>
 
-            {/* Customer Nested Routes */}
-            <Route
-              path="/customer"
-              element={
-                <ProtectedRoute roles={["Customer"]}>
-                  <CustomerLayout />
-                </ProtectedRoute>
-              }
-            >
-              <Route index element={<CustomerDashboard />} />
-              <Route path="profile" element={<CustomerProfile />} />
-              <Route path="orders" element={<CustomerOrders />} />
-              <Route path="settings" element={<CustomerSettings />} />
-            </Route>
+          {/* ── Admin ── */}
+          <Route
+            path="/admin"
+            element={<ProtectedRoute roles={["Admin"]}><AdminLayout /></ProtectedRoute>}
+          >
+            <Route index          element={<AdminDashboard />} />
+            <Route path="customers" element={<AdminCustomers />} />
+            <Route path="reports"   element={<AdminReports />} />
+            <Route path="settings"  element={<AdminSettings />} />
+          </Route>
 
-            {/* 404 */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          {/* ── Customer ── */}
+          <Route
+            path="/customer"
+            element={<ProtectedRoute roles={["Customer"]}><CustomerLayout /></ProtectedRoute>}
+          >
+            <Route index        element={<CustomerDashboard />} />
+            <Route path="profile"  element={<CustomerProfile />} />
+            <Route path="orders"   element={<CustomerOrders />} />
+            <Route path="settings" element={<CustomerSettings />} />
+          </Route>
 
-          <ToastContainer
-            position="top-right"
-            autoClose={3000}
-            hideProgressBar={false}
-            newestOnTop
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-            theme="light"
-            className="mt-16"
-            toastClassName="rounded-2xl shadow-xl"
-          />
-        </div>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+
+        <Footer />
+
+        <ToastContainer position="top-right" autoClose={2500} theme="dark" newestOnTop closeOnClick pauseOnHover />
       </AuthProvider>
-    </Router>
+    </HashRouter>
   );
 }
 

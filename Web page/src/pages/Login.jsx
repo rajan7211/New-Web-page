@@ -2,22 +2,32 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useFormik } from "formik";
-import { motion } from "framer-motion";
-import { FiMail, FiLock, FiEye, FiEyeOff, FiCheckCircle, FiAlertCircle, FiLoader, FiLogIn } from "react-icons/fi";
+import * as Yup from "yup";
+import { FiMail, FiLock, FiEye, FiEyeOff, FiAlertCircle, FiZap } from "react-icons/fi";
 import useAuth from "../hooks/useAuth";
-import { loginValidationSchema } from "./utils/validationSchemas";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
+
+const schema = Yup.object({
+  email: Yup.string()
+    .trim()
+    .email("Please enter a valid email address")
+    .required("Email is required"),
+  password: Yup.string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
+});
+
+const DEMO_ACCOUNTS = [
+  { role: "Super Admin", email: "superadmin@demo.com", password: "SuperAdmin123!" },
+  { role: "Admin",       email: "admin@demo.com",      password: "AdminDemo123!" },
+  { role: "Customer",    email: "customer@demo.com",   password: "Customer123!" },
+];
 
 function Login() {
   const { login, isAuthenticated, currentUser, getDashboardRoute } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [rememberMe, setRememberMe] = useState(true);
+  const navigate  = useNavigate();
+  const location  = useLocation();
+  const [showPw, setShowPw] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (isAuthenticated && currentUser) {
@@ -27,180 +37,174 @@ function Login() {
 
   const formik = useFormik({
     initialValues: { email: "", password: "" },
-    validationSchema: loginValidationSchema,
+    validationSchema: schema,
+    validateOnBlur: true,
+    validateOnChange: true,
     onSubmit: async (values) => {
-      setIsLoading(true);
+      setLoading(true);
       try {
-        const user = await login(values);
-        if (!rememberMe) localStorage.removeItem("rbac_is_logged_in");
+        const user = await login({ email: values.email.trim(), password: values.password });
         toast.success(`Welcome back, ${user.firstName || user.name}!`);
-        const destination = location.state?.from?.pathname || getDashboardRoute(user.role);
-        navigate(destination, { replace: true });
-      } catch (error) {
-        toast.error(error?.message || "Invalid credentials.");
+        const dest = location.state?.from?.pathname || getDashboardRoute(user.role);
+        navigate(dest, { replace: true });
+      } catch (err) {
+        toast.error(err?.message || "Invalid email or password.");
+        formik.setFieldError("password", "Invalid email or password");
       } finally {
-        setIsLoading(false);
+        setLoading(false);
       }
     },
   });
 
-  const isFormValid =
-    Boolean(formik.values.email) &&
-    Boolean(formik.values.password) &&
-    Object.keys(formik.errors).length === 0;
+  const fillDemo = (acc) => {
+    formik.setValues({ email: acc.email, password: acc.password });
+  };
+
+  const fieldError = (name) => formik.touched[name] && formik.errors[name];
 
   return (
-    <div className="min-h-[calc(100vh-84px)] bg-gradient-to-br from-slate-50 via-blue-50/40 to-indigo-50/60 flex items-center justify-center px-4 py-12">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.45 }}
-        className="w-full max-w-md"
-      >
-        <Card className="rounded-3xl border-white/40 shadow-2xl bg-white/80 backdrop-blur-2xl">
-          <CardHeader className="text-center pb-4 pt-8">
-            <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              className="mx-auto mb-5 inline-flex h-14 w-14 items-center justify-center 
-                rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-2xl shadow-blue-500/50"
+    <div className="min-h-[calc(100vh-64px)] flex bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/40">
+      {/* Left decorative panel */}
+      <div className="hidden lg:flex flex-col justify-between w-96 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 p-10 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-10"
+          style={{backgroundImage:"radial-gradient(circle at 20% 50%,#fff 1px,transparent 1px),radial-gradient(circle at 80% 20%,#fff 1px,transparent 1px)",backgroundSize:"40px 40px"}} />
+        <div className="relative">
+          <div className="flex items-center gap-2 mb-12">
+            <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
+              <FiZap className="w-4 h-4 text-white" />
+            </div>
+            <span className="text-white font-bold text-lg">Whitepace</span>
+          </div>
+          <h2 className="text-3xl font-bold text-white leading-snug">Your workspace,<br/>your rules.</h2>
+          <p className="text-blue-200 mt-4 text-sm leading-relaxed">Role-based access control that keeps every team member in the right place.</p>
+        </div>
+
+        <div className="relative space-y-3">
+          <p className="text-blue-300 text-xs font-semibold uppercase tracking-wider mb-3">Demo accounts</p>
+          {DEMO_ACCOUNTS.map((acc) => (
+            <button
+              key={acc.role}
+              onClick={() => fillDemo(acc)}
+              className="w-full text-left px-4 py-3 rounded-xl bg-white/10 hover:bg-white/20 transition-colors border border-white/10"
             >
-              <FiLogIn className="h-7 w-7" />
-            </motion.div>
-            <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              Welcome Back
-            </CardTitle>
-            <CardDescription>Login to access your personalized dashboard</CardDescription>
-          </CardHeader>
+              <p className="text-white text-sm font-semibold">{acc.role}</p>
+              <p className="text-blue-200 text-xs mt-0.5">{acc.email}</p>
+            </button>
+          ))}
+        </div>
+      </div>
 
-          <CardContent className="px-8">
-            <form onSubmit={formik.handleSubmit} className="space-y-5">
-              <div className="space-y-1.5">
-                <Label htmlFor="email" className="text-sm font-semibold text-slate-700">Email Address</Label>
-                <div className="relative">
-                  <FiMail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 h-4 w-4" />
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formik.values.email}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    placeholder="you@example.com"
-                    className={`pl-10 rounded-xl border transition-all
-                      ${formik.touched.email && formik.errors.email
-                        ? "border-red-300 bg-red-50 focus-visible:ring-red-200"
-                        : "border-slate-200 bg-white/70 focus-visible:ring-blue-100"
-                      }`}
-                  />
-                </div>
-                {formik.touched.email && formik.errors.email && (
-                  <p className="text-xs text-red-600 font-medium">{formik.errors.email}</p>
+      {/* Right form panel */}
+      <div className="flex-1 flex items-center justify-center px-6 py-12">
+        <div className="w-full max-w-md">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-slate-900">Welcome back</h1>
+            <p className="text-slate-500 mt-2">Sign in to your account to continue.</p>
+          </div>
+
+          {/* Mobile demo accounts */}
+          <div className="lg:hidden grid grid-cols-3 gap-2 mb-6">
+            {DEMO_ACCOUNTS.map((acc) => (
+              <button key={acc.role} onClick={() => fillDemo(acc)}
+                className="text-center px-2 py-2 rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-700 border border-slate-200 text-xs font-medium text-slate-700 transition-colors">
+                {acc.role}
+              </button>
+            ))}
+          </div>
+
+          <form onSubmit={formik.handleSubmit} noValidate className="space-y-5">
+            {/* Email */}
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-1.5">Email address</label>
+              <div className="relative">
+                <FiMail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4 pointer-events-none" />
+                <input
+                  id="email" name="email" type="email"
+                  value={formik.values.email}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  placeholder="you@example.com"
+                  autoComplete="email"
+                  className={`w-full pl-10 pr-4 py-3 rounded-xl border text-sm transition-all outline-none
+                    ${fieldError("email")
+                      ? "border-red-300 bg-red-50 focus:border-red-400 focus:ring-2 focus:ring-red-100"
+                      : "border-slate-200 bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                    }`}
+                />
+                {fieldError("email") && (
+                  <FiAlertCircle className="absolute right-3.5 top-1/2 -translate-y-1/2 text-red-400 w-4 h-4" />
                 )}
               </div>
+              {fieldError("email") && (
+                <p className="mt-1.5 text-xs text-red-600 flex items-center gap-1">
+                  <FiAlertCircle className="w-3 h-3 shrink-0" />{formik.errors.email}
+                </p>
+              )}
+            </div>
 
-              <div className="space-y-1.5">
-                <Label htmlFor="password" className="text-sm font-semibold text-slate-700">Password</Label>
-                <div className="relative">
-                  <FiLock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 h-4 w-4" />
-                  <Input
-                    id="password"
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    value={formik.values.password}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    placeholder="••••••••"
-                    className={`pl-10 pr-10 rounded-xl border transition-all
-                      ${formik.touched.password && formik.errors.password
-                        ? "border-red-300 bg-red-50 focus-visible:ring-red-200"
-                        : "border-slate-200 bg-white/70 focus-visible:ring-blue-100"
-                      }`}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-600"
-                  >
-                    {showPassword ? <FiEyeOff className="h-4 w-4" /> : <FiEye className="h-4 w-4" />}
-                  </button>
-                </div>
-                {formik.touched.password && formik.errors.password && (
-                  <p className="text-xs text-red-600 font-medium">{formik.errors.password}</p>
-                )}
+            {/* Password */}
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-sm font-semibold text-slate-700">Password</label>
+                <button type="button" className="text-xs font-medium text-blue-600 hover:text-blue-700">Forgot password?</button>
               </div>
-
-              <div className="flex items-center justify-between">
-                <label className="flex items-center gap-2 text-sm font-medium text-slate-600 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={rememberMe}
-                    onChange={() => setRememberMe((p) => !p)}
-                    className="h-4 w-4 rounded border-slate-300 text-blue-600"
-                  />
-                  Remember me
-                </label>
-                <button type="button" className="text-sm font-semibold text-blue-600 hover:text-blue-700">
-                  Forgot password?
+              <div className="relative">
+                <FiLock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4 pointer-events-none" />
+                <input
+                  id="password" name="password"
+                  type={showPw ? "text" : "password"}
+                  value={formik.values.password}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  placeholder="••••••••"
+                  autoComplete="current-password"
+                  className={`w-full pl-10 pr-10 py-3 rounded-xl border text-sm transition-all outline-none
+                    ${fieldError("password")
+                      ? "border-red-300 bg-red-50 focus:border-red-400 focus:ring-2 focus:ring-red-100"
+                      : "border-slate-200 bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
+                    }`}
+                />
+                <button type="button" onClick={() => setShowPw((p) => !p)}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-600 transition-colors">
+                  {showPw ? <FiEyeOff className="w-4 h-4" /> : <FiEye className="w-4 h-4" />}
                 </button>
               </div>
+              {fieldError("password") && (
+                <p className="mt-1.5 text-xs text-red-600 flex items-center gap-1">
+                  <FiAlertCircle className="w-3 h-3 shrink-0" />{formik.errors.password}
+                </p>
+              )}
+            </div>
 
-              <Button
-                type="submit"
-                disabled={!isFormValid || isLoading}
-                className={`w-full rounded-xl py-5 text-sm font-bold shadow-lg
-                  ${isLoading || !isFormValid
-                    ? "bg-slate-300 text-slate-500 cursor-not-allowed"
-                    : "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white"
-                  }`}
-              >
-                {isLoading ? (
-                  <>
-                    <FiLoader className="h-4 w-4 animate-spin mr-2" />
-                    Signing in...
-                  </>
-                ) : (
-                  "Sign In"
-                )}
-              </Button>
+            {/* Submit */}
+            <button
+              type="submit"
+              disabled={loading || !formik.isValid || !formik.dirty}
+              className={`w-full py-3 rounded-xl text-sm font-bold transition-all shadow-sm
+                ${loading || !formik.isValid || !formik.dirty
+                  ? "bg-slate-200 text-slate-400 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700 text-white shadow-blue-500/25 active:scale-[0.98]"
+                }`}
+            >
+              {loading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  Signing in…
+                </span>
+              ) : "Sign In"}
+            </button>
+          </form>
 
-              <div className="flex items-center justify-center gap-2 text-xs">
-                {isFormValid ? (
-                  <>
-                    <FiCheckCircle className="w-3.5 h-3.5 text-emerald-500" />
-                    <span className="text-emerald-600 font-medium">Valid credentials</span>
-                  </>
-                ) : (
-                  <>
-                    <FiAlertCircle className="w-3.5 h-3.5 text-amber-400" />
-                    <span className="text-slate-400">Enter your login details</span>
-                  </>
-                )}
-              </div>
-            </form>
-          </CardContent>
-
-          <CardFooter className="flex justify-center pb-8 pt-2">
-            <p className="text-sm text-slate-500">
-              Don't have an account?{" "}
-              <Link to="/register" className="font-bold text-blue-600 hover:text-blue-700 underline">
-                Create an account
-              </Link>
-            </p>
-          </CardFooter>
-        </Card>
-      </motion.div>
+          <p className="text-center text-sm text-slate-500 mt-6">
+            Don't have an account?{" "}
+            <Link to="/register" className="font-semibold text-blue-600 hover:text-blue-700">Create one</Link>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
 
 export default Login;
-
-
-
-
-
-
-
 
 
